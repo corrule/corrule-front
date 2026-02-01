@@ -1,0 +1,21 @@
+POST /api/v1/users/password
+body: {
+  "currentPassword": "SecurePass123",
+  "newPassword": "654731Cyber!"
+}
+response: {
+    "success": true,
+    "message": "Password updated successfully"
+}
+
+POST /api/v1/users/password/reset-request
+body: {
+  "email": "mansimovnijat@gmail.com"
+}
+response:{
+    "success": true,
+    "message": "If email exists, password reset link has been sent"
+}
+
+GET /api/v1/users/:publicusername
+
