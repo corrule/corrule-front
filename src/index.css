@@ -1,0 +1,286 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Security Rules Platform Design System
+   Dark cybersecurity theme with teal accents
+   Inspired by Splunk, Elastic Security, and modern SOC dashboards
+*/
+
+@layer base {
+  :root {
+    /* Core colors - Dark theme by default */
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary - Cyber Teal */
+    --primary: 173 80% 40%;
+    --primary-foreground: 222 47% 6%;
+
+    /* Secondary - Slate */
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Accent - Electric Blue */
+    --accent: 199 89% 48%;
+    --accent-foreground: 222 47% 6%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Semantic Colors */
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 6%;
+    
+    --info: 199 89% 48%;
+    --info-foreground: 222 47% 6%;
+
+    /* Status Colors for Rule Lifecycle */
+    --status-draft: 38 92% 50%;
+    --status-review: 199 89% 48%;
+    --status-published: 142 76% 36%;
+    --status-deprecated: 0 84% 60%;
+
+    /* MITRE ATT&CK Tactic Colors */
+    --tactic-reconnaissance: 280 65% 60%;
+    --tactic-resource-development: 320 70% 55%;
+    --tactic-initial-access: 0 70% 55%;
+    --tactic-execution: 25 90% 55%;
+    --tactic-persistence: 45 90% 50%;
+    --tactic-privilege-escalation: 60 70% 45%;
+    --tactic-defense-evasion: 90 60% 45%;
+    --tactic-credential-access: 120 60% 45%;
+    --tactic-discovery: 150 60% 45%;
+    --tactic-lateral-movement: 180 60% 45%;
+    --tactic-collection: 200 70% 50%;
+    --tactic-command-control: 220 70% 55%;
+    --tactic-exfiltration: 260 70% 55%;
+    --tactic-impact: 300 70% 55%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 173 80% 40%;
+
+    --radius: 0.5rem;
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 7%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 173 80% 40%;
+    --sidebar-primary-foreground: 222 47% 6%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 173 80% 40%;
+
+    /* Charts */
+    --chart-1: 173 80% 40%;
+    --chart-2: 199 89% 48%;
+    --chart-3: 142 76% 36%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 280 65% 60%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(173 80% 40%), hsl(199 89% 48%));
+    --gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(173 80% 40%));
+    --gradient-warning: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 90% 55%));
+    --gradient-danger: linear-gradient(135deg, hsl(0 84% 60%), hsl(320 70% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(222 47% 9%), hsl(222 47% 11%));
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+    --shadow-glow: 0 0 20px -5px hsl(173 80% 40% / 0.3);
+  }
+
+  .dark {
+    /* Same as root since we're dark-first */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-secondary rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+}
+
+@layer components {
+  /* Glass effect for cards */
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  }
+
+  /* Status badges */
+  .status-draft {
+    @apply bg-warning/20 text-warning border border-warning/30;
+  }
+
+  .status-review {
+    @apply bg-info/20 text-info border border-info/30;
+  }
+
+  .status-published {
+    @apply bg-success/20 text-success border border-success/30;
+  }
+
+  .status-deprecated {
+    @apply bg-destructive/20 text-destructive border border-destructive/30;
+  }
+
+  /* Glow effects */
+  .glow-primary {
+    box-shadow: 0 0 20px -5px hsl(var(--primary) / 0.4);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 20px -5px hsl(var(--success) / 0.4);
+  }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+                var(--gradient-primary) border-box;
+    border: 1px solid transparent;
+  }
+
+  /* Data grid styling */
+  .data-grid {
+    @apply bg-card rounded-lg border border-border overflow-hidden;
+  }
+
+  .data-grid-header {
+    @apply bg-secondary/50 px-4 py-3 text-sm font-medium text-muted-foreground;
+  }
+
+  .data-grid-row {
+    @apply px-4 py-3 border-t border-border hover:bg-secondary/30 transition-colors;
+  }
+
+  /* Pulse animation for live indicators */
+  .pulse-live {
+    @apply relative;
+  }
+
+  .pulse-live::before {
+    content: '';
+    @apply absolute w-2 h-2 bg-success rounded-full;
+    animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+
+  /* MITRE ATT&CK matrix styling */
+  .mitre-tactic {
+    @apply px-2 py-1 rounded text-xs font-medium;
+  }
+
+  /* Code block styling */
+  .code-block {
+    @apply bg-secondary/50 rounded-lg p-4 font-mono text-sm overflow-x-auto;
+  }
+
+  /* Native select styling - override defaults */
+  select {
+    @apply w-full px-3 py-2 bg-slate-950 text-foreground border border-input rounded-md;
+    @apply transition-colors duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-transparent;
+    @apply hover:bg-slate-900;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    
+    /* Style the select options */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 12px;
+    padding-right: 32px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+
+  select option {
+    @apply bg-slate-950 text-foreground;
+  }
+
+  select option:hover {
+    @apply bg-teal-600 text-white;
+  }
+
+  select option:checked {
+    @apply bg-teal-600 text-white;
+  }
+
+  /* Firefox specific */
+  select:focus-visible {
+    @apply ring-2 ring-teal-600 ring-offset-0;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Animated gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-primary);
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg;
+  }
+}
