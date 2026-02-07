@@ -16,6 +16,7 @@ import WorkExperienceForm from '@/components/WorkExperienceForm';
 import WorkExperienceList from '@/components/WorkExperienceList';
 import { SocialMediaForm } from '@/components/SocialMediaForm';
 import { SocialMediaList } from '@/components/SocialMediaList';
+import { TwoFactorAuthSetup } from '@/components/TwoFactorAuth';
 import type { User, UserStatistics, LoginRecord, WorkExperienceEntry, SocialMediaAccount } from '@/types';
 
 export default function Profile() {
@@ -534,6 +535,7 @@ export default function Profile() {
 
         {/* Security Tab */}
         <TabsContent value="security" className="space-y-6">
+          {/* Change Password Card */}
           <Card>
             <CardHeader>
               <CardTitle>Change Password</CardTitle>
@@ -615,29 +617,16 @@ export default function Profile() {
             </form>
           </Card>
 
+          {/* Two-Factor Authentication Card */}
+          <TwoFactorAuthSetup onSuccess={() => fetchProfile()} />
+
+          {/* Account Security Card */}
           <Card>
             <CardHeader>
               <CardTitle>Account Security</CardTitle>
               <CardDescription>Manage your security settings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-start justify-between p-4 border rounded-lg">
-                <div className="space-y-1">
-                  <p className="font-medium flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
-                    Two-Factor Authentication
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {fullProfile?.twoFactorAuth?.enabled ? 'Enabled' : 'Disabled'}
-                  </p>
-                </div>
-                <Button variant="outline" disabled>
-                  {fullProfile?.twoFactorAuth?.enabled ? 'Disable' : 'Enable'}
-                </Button>
-              </div>
-
-              <Separator />
-
               <div>
                 <h3 className="font-medium mb-4">Active Sessions</h3>
                 <div className="space-y-2">

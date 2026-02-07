@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { api, setAccessToken, setRefreshToken } from '@/services/api';
+import TwoFAVerificationModal from '@/components/TwoFAVerificationModal';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,6 +18,10 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [is2FALoading, setIs2FALoading] = useState(false);
+  const [twoFAError, setTwoFAError] = useState<string | null>(null);
   const { login, error, setUserSession } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -30,14 +35,78 @@ export default function Login() {
 
     setIsLoading(true);
     try {
-      await login(email, password);
-      toast({ title: 'Welcome back!', description: 'You have successfully logged in.' });
-      navigate('/');
+      const response = await api.login({ email, password });
+
+      // Check if 2FA is required
+      if (response.success && (response as any).requires2FA) {
+        setUserId((response as any).userId);
+        setRequires2FA(true);
+        toast({
+          title: 'Two-Factor Authentication',
+          description: 'Please enter the code sent to your email',
+        });
+      } else if (response.success && response.data) {
+        // No 2FA required, login successful
+        setAccessToken(response.data.tokens.accessToken);
+        setRefreshToken(response.data.tokens.refreshToken);
+        setUserSession(response.data.user, response.data.tokens.accessToken, response.data.tokens.refreshToken);
+        
+        toast({ title: 'Welcome back!', description: 'You have successfully logged in.' });
+        navigate('/');
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Invalid credentials';
       toast({ title: 'Error', description: message, variant: 'destructive' });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handle2FAVerify = async (code: string) => {
+    if (!userId) {
+      toast({ title: 'Error', description: 'User ID missing', variant: 'destructive' });
+      return;
+    }
+
+    setIs2FALoading(true);
+    setTwoFAError(null);
+    try {
+      const response = await api.verify2FACode(code, userId);
+
+      if (response.success && response.data) {
+        setAccessToken(response.data.tokens.accessToken);
+        setRefreshToken(response.data.tokens.refreshToken);
+        setUserSession(response.data.user, response.data.tokens.accessToken, response.data.tokens.refreshToken);
+
+        toast({ title: 'Welcome!', description: 'You have successfully logged in.' });
+        setRequires2FA(false);
+        setUserId(null);
+        navigate('/');
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Verification failed';
+      setTwoFAError(message);
+    } finally {
+      setIs2FALoading(false);
+    }
+  };
+
+  const handle2FAResend = async () => {
+    if (!userId) {
+      toast({ title: 'Error', description: 'User ID missing', variant: 'destructive' });
+      return;
+    }
+
+    try {
+      await api.resend2FACode();
+      setTwoFAError(null);
+      toast({
+        title: 'Code Resent',
+        description: 'A new verification code has been sent to your email',
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to resend code';
+      toast({ title: 'Error', description: message, variant: 'destructive' });
     }
   };
 
@@ -86,6 +155,22 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-grid-pattern">
+      {/* 2FA Verification Modal */}
+      <TwoFAVerificationModal
+        open={requires2FA}
+        isLoading={is2FALoading}
+        error={twoFAError}
+        onVerify={handle2FAVerify}
+        onResend={handle2FAResend}
+        onCancel={() => {
+          setRequires2FA(false);
+          setUserId(null);
+          setTwoFAError(null);
+        }}
+        expiresIn={120}
+      />
+
+      {/* Login Card */}
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">

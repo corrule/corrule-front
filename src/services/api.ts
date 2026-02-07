@@ -317,6 +317,57 @@ class ApiClient {
     );
   }
 
+  // Email-based 2FA methods
+  async enable2FAEmail() {
+    return this.request<{ success: boolean; message: string; data: { email: string; expiresIn: number } }>(
+      '/users/2fa/enable',
+      { method: 'POST' }
+    );
+  }
+
+  async verify2FASetup(code: string) {
+    return this.request<{ success: boolean; message: string; data: { twoFactorEnabled: boolean } }>(
+      '/users/2fa/verify-setup',
+      {
+        method: 'POST',
+        body: JSON.stringify({ code }),
+      }
+    );
+  }
+
+  async disable2FAEmail(password: string) {
+    return this.request<{ success: boolean; message: string; data: { twoFactorEnabled: boolean } }>(
+      '/users/2fa/disable',
+      {
+        method: 'POST',
+        body: JSON.stringify({ password }),
+      }
+    );
+  }
+
+  async verify2FACode(code: string, userId?: string) {
+    return this.request<{ success: boolean; message: string; data: { user: import('../types').User; tokens: { accessToken: string; refreshToken: string; expiresIn: number } } }>(
+      '/auth/verify-2fa',
+      {
+        method: 'POST',
+        body: JSON.stringify({ userId, code, type: 'email' }),
+      }
+    );
+  }
+
+  async resend2FACode() {
+    return this.request<{ success: boolean; message: string; data: { email: string; expiresIn: number } }>(
+      '/users/2fa/resend-code',
+      { method: 'POST' }
+    );
+  }
+
+  async get2FAStatus() {
+    return this.request<{ success: boolean; data: { emailBased2FA: { enabled: boolean }; totpBased2FA: { enabled: boolean } } }>(
+      '/users/2fa/status'
+    );
+  }
+
   // Rules endpoints
   async getRules(filters: import('../types').RuleFilters = {}, page = 1, limit = 20) {
     const params = new URLSearchParams({
