@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => ({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://corrule.com',
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path,

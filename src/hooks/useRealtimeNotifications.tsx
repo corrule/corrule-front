@@ -27,7 +27,7 @@ export const useRealtimeNotifications = () => {
         const socketIOModule = await import(/* @vite-ignore */ importPath);
         const io = socketIOModule.io;
 
-        const socketUrl = API_BASE_URL?.replace(/\/api\/v1/, '') || 'http://localhost:5000';
+        const socketUrl = API_BASE_URL?.replace(/\/api\/v1/, '') || 'https://corrule.com';
         
         const socket = io(socketUrl, {
           auth: {
